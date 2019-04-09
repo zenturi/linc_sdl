@@ -22,7 +22,7 @@ private extern class SDLEvent {
     var cdevice:ControllerDeviceEvent;
     var adevice:AudioDeviceEvent;
     var quit:QuitEvent;
-    // var user:UserEvent;
+    var user:UserEvent;
     // var syswm:SysWMEvent;
     var tfinger:TouchFingerEvent;
     var mgesture:MultiGestureEvent;
@@ -31,11 +31,32 @@ private extern class SDLEvent {
 }
 
 
-@:include('linc_sdl.h') @:native("::cpp::Reference<SDL_Event>")
-@:keep extern class EventRef extends SDLEvent {}
+// @:include('linc_sdl.h') @:native("::cpp::Reference<SDL_Event>")
+// @:keep extern class EventRef extends SDLEvent {}
+@:structAccess
+@:include('linc_sdl.h') @:native("SDL_Event")
 
-@:include('linc_sdl.h') @:native("::cpp::Struct<SDL_Event>")
-@:keep extern class Event extends EventRef {}
+@:keep extern class Event  extends SDLEvent/*extends EventRef*/ {
+
+}
+
+@:include('linc_sdl.h') @:coreType @:native("::cpp::Reference<Sint32>") 
+extern abstract Sint32 to Int {}
+
+// @:structAccess
+@:include('linc_sdl.h') @:native("::cpp::Struct<SDL_UserEvent>")
+extern class UserEvent {
+    var type:Int;        /**< ::SDL_USEREVENT through ::SDL_LASTEVENT-1 */
+    var timestamp:Int;
+    var windowID:Int;    /**< The associated window if any */
+    var code:Int;        /**< User defined event code */
+    var data1:cpp.Pointer<haxe.io.BytesData>;        /**< User defined data pointer */
+    var data2:cpp.Pointer<haxe.io.BytesData>;        /**< User defined data pointer */
+
+    static inline function init():UserEvent{
+        return untyped __cpp__('SDL_UserEvent{}');
+    }
+}
 
 @:structAccess
 @:include('linc_sdl.h') @:native("::cpp::Struct<SDL_QuitEvent>")

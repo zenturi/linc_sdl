@@ -4,6 +4,8 @@
 #include <hxcpp.h>
 #endif
 
+#include <string>
+
 #define SDL_MAIN_HANDLED 1
 #include "../lib/sdl/include/SDL.h"
 
@@ -70,6 +72,7 @@ namespace linc {
             extern int blitSurface(SDL_Surface* src, Dynamic srcrect, SDL_Surface* dst, Dynamic dstrect);
             extern SDL_Cursor* createSystemCursor(int id);
             extern Dynamic joystickGetBall(SDL_Joystick* joystick, int ball, Dynamic into);
+            extern const char* joystickGetGUID(SDL_Joystick* joystick);
             extern ::String joystickGetGUIDString(Array<unsigned char> guid);
             extern void setModState(int modstate);
             extern void setTextInputRect(int x,int y, int w, int h);
@@ -103,7 +106,7 @@ namespace linc {
         //internal
 
             //event watches
-            typedef ::cpp::Function < int(int, ::cpp::Reference<SDL_Event>) > InternalEventFilterFN;
+            typedef ::cpp::Function < int(int, SDL_Event*) > InternalEventFilterFN;
             extern void init_event_watch( InternalEventFilterFN fn );
 
             //timers

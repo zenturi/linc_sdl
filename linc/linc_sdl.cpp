@@ -5,6 +5,7 @@
 #include "../lib/sdl/include/SDL_revision.h"
 #include <vector>
 #include <map>
+#include <string>
 
 #if defined(LINC_SDL_WITH_SDL_MAIN)
 
@@ -445,6 +446,13 @@ namespace linc {
             return convert::set_point_into(into, dx, dy);
 
         } //joystickGetBall
+
+        const char* joystickGetGUID(SDL_Joystick *joystick) {
+            char* guid = new char[64];
+            SDL_JoystickGetGUIDString (SDL_JoystickGetGUID (joystick), guid, 64);
+            std::string str(guid, 64);
+            return str.c_str();
+        } 
 
         ::String joystickGetGUIDString(Array<unsigned char> guid) {
 
