@@ -754,10 +754,24 @@ extern class SDL {
 	static function getNumDisplayModes(displayIndex:Int):Int;
 	@:native('linc::sdl::getDisplayMode')
 	static function getDisplayMode(displayIndex:Int, modeIndex:Int):SDLDisplayMode;
+	@:native('linc::sdl::getWindowDisplayMode')
+	static function getWindowDisplayMode(window:Window, mode:SDLDisplayMode):SDLDisplayMode;
 	@:native('linc::sdl::getDesktopDisplayMode')
 	static function getDesktopDisplayMode(displayIndex:Int):SDLDisplayMode;
 	@:native('linc::sdl::getCurrentDisplayMode')
 	static function getCurrentDisplayMode(displayIndex:Int):SDLDisplayMode;
+	static inline function setWindowDisplayMode(window:Window, mode:SDLDisplayMode):Int {
+		var w = mode.w;
+		var h = mode.h;
+		var refresh_rate = mode.refresh_rate;
+		var format = mode.format;
+
+		untyped __cpp__('SDL_DisplayMode _mode = { format, w, h, refresh_rate, 0 }');
+
+		return untyped __cpp__('SDL_SetWindowDisplayMode (window, &mode)');
+	}
+	@:native('SDL_GetWindowDisplayIndex') static function getWindowDisplayIndex(window:Window):Int;
+	@:native('SDL_RaiseWindow') static function raiseWindow(window:Window):Void;
 	@:native("SDL_GetDisplayName")
 	private static function _getDisplayName(displayIndex:Int):cpp.ConstCharStar;
 	static inline function getDisplayName(displayIndex:Int):String
@@ -784,10 +798,24 @@ extern class SDL {
 	static function setWindowTitle(window:Window, title:String):Void;
 	@:native('SDL_SetWindowPosition')
 	static function setWindowPosition(window:Window, w:Int, h:Int):Void;
+	static inline function setWindowResizable(window:Window, resizable:Bool):Void {
+		var _resizable = resizable ? 1 : 0;
+		untyped __cpp__('SDL_SetWindowResizable({0}, (SDL_bool){1})', window, _resizable);
+	}
+	@:native('SDL_GetWindowFlags')
+	static function getWindowFlags(window:Window):Int;
 	@:native('linc::sdl::getWindowPosition')
 	static function getWindowPosition(window:Window, into:SDLPoint):SDLPoint;
 	@:native('linc::sdl::getWindowSize')
 	static function getWindowSize(window:Window, into:SDLSize):SDLSize;
+	@:native('SDL_MinimizeWindow')
+	static function minimizeWindow(window:Window):Void;
+	@:native('SDL_MaximizeWindow')
+	static function maximizeWindow(window:Window):Void;
+	@:native('SDL_RestoreWindow')
+	static function restoreWindow(window:Window):Void;
+	@:native('SDL_SetWindowIcon')
+	static function setWindowIcon(window:Window):Void;
 	@:native('SDL_DisableScreenSaver')
 	static function disableScreenSaver():Void;
 	@:native('SDL_EnableScreenSaver')
@@ -1127,27 +1155,26 @@ abstract SDLExternalStorageState(Int) from Int to Int {
 } // SDLExternalStorageState
 
 #end
-
 @:include("linc_sdl.h")
 @:native("SDL_LogPriority")
 @:coreType
-extern class SDL_LogPriorityImpl{}
+extern class SDL_LogPriorityImpl {}
 
 @:enum
- extern abstract SDLLogPriority(SDL_LogPriorityImpl) {
-    @:native('SDL_LOG_PRIORITY_VERBOSE')
+extern abstract SDLLogPriority(SDL_LogPriorityImpl) {
+	@:native('SDL_LOG_PRIORITY_VERBOSE')
 	var SDL_LOG_PRIORITY_VERBOSE = 1;
-     @:native('SDL_LOG_PRIORITY_DEBUG')
+	@:native('SDL_LOG_PRIORITY_DEBUG')
 	var SDL_LOG_PRIORITY_DEBUG = 2;
-     @:native('SDL_LOG_PRIORITY_INFO')
+	@:native('SDL_LOG_PRIORITY_INFO')
 	var SDL_LOG_PRIORITY_INFO = 3;
-     @:native('SDL_LOG_PRIORITY_WARN')
+	@:native('SDL_LOG_PRIORITY_WARN')
 	var SDL_LOG_PRIORITY_WARN = 4;
-     @:native('SDL_LOG_PRIORITY_ERROR')
+	@:native('SDL_LOG_PRIORITY_ERROR')
 	var SDL_LOG_PRIORITY_ERROR = 5;
-     @:native('SDL_LOG_PRIORITY_CRITICAL')
+	@:native('SDL_LOG_PRIORITY_CRITICAL')
 	var SDL_LOG_PRIORITY_CRITICAL = 6;
-     @:native('SDL_LOG_PRIORITY_PRIORITIES')
+	@:native('SDL_LOG_PRIORITY_PRIORITIES')
 	var SDL_NUM_LOG_PRIORITIES = 7;
 } // SDLLogPriority
 
@@ -1621,4 +1648,45 @@ typedef JNIEnv = cpp.Pointer<AndroidJNIEnv>;
 	@:native('SDL_MOUSEWHEEL_FLIPPED') var SDL_MOUSEWHEEL_FLIPPED;
 }
 
+@:keep
+@:include('linc_sdl.h')
+@:enum extern abstract SDL_WindowFlags(Int) to Int {
+	@:native('SDL_WINDOW_FULLSCREEN') var SDL_WINDOW_FULLSCREEN; /**< fullscreen window */
 
+	@:native('SDL_WINDOW_OPENGL') var SDL_WINDOW_OPENGL; /**< window usable with OpenGL context */
+
+	@:native('SDL_WINDOW_SHOWN') var SDL_WINDOW_SHOWN; /**< window is visible */
+
+	@:native('SDL_WINDOW_HIDDEN') var SDL_WINDOW_HIDDEN; /**< window is not visible */
+
+	@:native('SDL_WINDOW_BORDERLESS') var SDL_WINDOW_BORDERLESS; /**< no window decoration */
+
+	@:native('SDL_WINDOW_RESIZABLE') var SDL_WINDOW_RESIZABLE; /**< window can be resized */
+
+	@:native('SDL_WINDOW_MINIMIZED') var SDL_WINDOW_MINIMIZED; /**< window is minimized */
+
+	@:native('SDL_WINDOW_MAXIMIZED') var SDL_WINDOW_MAXIMIZED; /**< window is maximized */
+
+	@:native('SDL_WINDOW_INPUT_GRABBED') var SDL_WINDOW_INPUT_GRABBED; /**< window has grabbed input focus */
+
+	@:native('SDL_WINDOW_INPUT_FOCUS') var SDL_WINDOW_INPUT_FOCUS; /**< window has input focus */
+
+	@:native('SDL_WINDOW_MOUSE_FOCUS') var SDL_WINDOW_MOUSE_FOCUS; /**< window has mouse focus */
+
+	@:native('SDL_WINDOW_FULLSCREEN_DESKTOP') var SDL_WINDOW_FULLSCREEN_DESKTOP;
+	@:native('SDL_WINDOW_FOREIGN') var SDL_WINDOW_FOREIGN; /**< window not created by SDL */
+
+	@:native('SDL_WINDOW_ALLOW_HIGHDPI') var SDL_WINDOW_ALLOW_HIGHDPI; /**< window should be created in high-DPI mode if supported */
+
+	@:native('SDL_WINDOW_MOUSE_CAPTURE') var SDL_WINDOW_MOUSE_CAPTURE; /**< window has mouse captured (unrelated to INPUT_GRABBED) */
+
+	@:native('SDL_WINDOW_ALWAYS_ON_TOP') var SDL_WINDOW_ALWAYS_ON_TOP; /**< window should always be above others */
+
+	@:native('SDL_WINDOW_SKIP_TASKBAR') var SDL_WINDOW_SKIP_TASKBAR; /**< window should not be added to the taskbar */
+
+	@:native('SDL_WINDOW_UTILITY') var SDL_WINDOW_UTILITY; /**< window should be treated as a utility window */
+
+	@:native('SDL_WINDOW_TOOLTIP') var SDL_WINDOW_TOOLTIP; /**< window should be treated as a tooltip */
+
+	@:native('SDL_WINDOW_POPUP_MENU') var SDL_WINDOW_POPUP_MENU; /**< window should be treated as a popup menu */
+}

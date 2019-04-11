@@ -621,6 +621,24 @@ namespace linc {
 
         } //getDisplayMode
 
+        Dynamic getWindowDisplayMode(SDL_Window window, ::Dynamic mode) {
+
+            SDL_DisplayMode _mode;
+           
+            _mode.h = mode->__FieldRef(HX_CSTRING("h"));
+            _mode.w =  mode->__FieldRef(HX_CSTRING("w"));
+            _mode.format =  mode->__FieldRef(HX_CSTRING("format"));
+            _mode.refresh_rate =  mode->__FieldRef(HX_CSTRING("refresh_rate"));
+
+
+            int res = SDL_GetWindowDisplayMode(&window,  &_mode);
+
+            if(res != 0) return null();
+
+            return convert::display_mode_to_hx(_mode);
+
+        } //getDisplayMode
+
         Dynamic getDesktopDisplayMode(int display_index) {
 
             SDL_DisplayMode mode;
