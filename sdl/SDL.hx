@@ -755,6 +755,7 @@ extern class SDL {
 	@:native('linc::sdl::getDisplayMode')
 	static function getDisplayMode(displayIndex:Int, modeIndex:Int):SDLDisplayMode;
 	@:native('linc::sdl::getWindowDisplayMode')
+
 	static function getWindowDisplayMode(window:Window, mode:SDLDisplayMode):SDLDisplayMode;
 	@:native('linc::sdl::getDesktopDisplayMode')
 	static function getDesktopDisplayMode(displayIndex:Int):SDLDisplayMode;
@@ -768,7 +769,7 @@ extern class SDL {
 
 		untyped __cpp__('SDL_DisplayMode _mode = { format, w, h, refresh_rate, 0 }');
 
-		return untyped __cpp__('SDL_SetWindowDisplayMode (window, &mode)');
+		return untyped __cpp__('SDL_SetWindowDisplayMode (window, &_mode)');
 	}
 	@:native('SDL_GetWindowDisplayIndex') static function getWindowDisplayIndex(window:Window):Int;
 	@:native('SDL_RaiseWindow') static function raiseWindow(window:Window):Void;
@@ -815,7 +816,7 @@ extern class SDL {
 	@:native('SDL_RestoreWindow')
 	static function restoreWindow(window:Window):Void;
 	@:native('SDL_SetWindowIcon')
-	static function setWindowIcon(window:Window):Void;
+	static function setWindowIcon(window:Window, surface:Surface):Void;
 	@:native('SDL_DisableScreenSaver')
 	static function disableScreenSaver():Void;
 	@:native('SDL_EnableScreenSaver')
@@ -1235,7 +1236,7 @@ abstract SDLBlendMode(Int) from Int to Int {
 } // SDLBlendMode
 
 @:enum
-abstract SDLPixelFormat(Int) from Int to Int {
+abstract SDLPixelFormat(cpp.UInt32) from cpp.UInt32 to cpp.UInt32 {
 	var SDL_PIXELFORMAT_UNKNOWN = 0x00000000;
 	var SDL_PIXELFORMAT_INDEX1LSB = 0x11100100;
 	var SDL_PIXELFORMAT_INDEX1MSB = 0x11200100;

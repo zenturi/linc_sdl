@@ -83,7 +83,7 @@ namespace linc {
             extern int renderCopy(SDL_Renderer* renderer, SDL_Texture* texture, Dynamic srcrect, Dynamic dstrect);
             extern int renderCopyEx(SDL_Renderer* renderer, SDL_Texture* texture, Dynamic srcrect, Dynamic dstrect, Float angle, Dynamic center, int flip);
             extern Dynamic getDisplayMode(int display_index, int mode_index);
-            extern Dynamic getWindowDisplayMode(SDL_Window window, ::Dynamic mode);
+            extern Dynamic getWindowDisplayMode(SDL_Window* window, ::Dynamic mode);
             extern Dynamic getDesktopDisplayMode(int display_index);
             extern Dynamic getCurrentDisplayMode(int display_index);
             extern Dynamic getGlobalMouseState(Dynamic into);
