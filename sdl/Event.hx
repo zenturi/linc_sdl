@@ -44,7 +44,8 @@ private extern class SDLEvent {
 extern abstract Sint32 to Int {}
 
 // @:structAccess
-@:include('linc_sdl.h') @:native("::cpp::Struct<SDL_UserEvent>")
+@:include('linc_sdl.h') @:native("SDL_UserEvent")
+@:structAccess
 extern class UserEvent {
     var type:Int;        /**< ::SDL_USEREVENT through ::SDL_LASTEVENT-1 */
     var timestamp:Int;

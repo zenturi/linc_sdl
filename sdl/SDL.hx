@@ -1631,6 +1631,8 @@ abstract SDLWindowFlags(Int) from Int to Int {
 typedef SDLKeycode = UInt;
 typedef SDLScancode = UInt;
 
+
+
 #if android
 @:include('jni.h')
 @:native('JNIEnv')
