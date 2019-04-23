@@ -1692,4 +1692,6 @@ typedef JNIEnv = cpp.Pointer<AndroidJNIEnv>;
 	@:native('SDL_WINDOW_TOOLTIP') var SDL_WINDOW_TOOLTIP; /**< window should be treated as a tooltip */
 
 	@:native('SDL_WINDOW_POPUP_MENU') var SDL_WINDOW_POPUP_MENU; /**< window should be treated as a popup menu */
+
+	@:native('SDL_WINDOW_VULKAN') var SDL_WINDOW_VULKAN;
 }
